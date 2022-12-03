@@ -1,0 +1,27 @@
+
+UI.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+btn_blue
+  rotate: false
+  xy: 1284, 1303
+  size: 254, 85
+  orig: 254, 85
+  offset: 0, 0
+  index: -1
+main_bg
+  rotate: false
+  xy: 2, 668
+  size: 1280, 720
+  orig: 1280, 720
+  offset: 0, 0
+  index: -1
+table
+  rotate: false
+  xy: 2, 2
+  size: 1280, 664
+  orig: 1280, 664
+  offset: 0, 0
+  index: -1
