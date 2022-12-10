@@ -26,12 +26,12 @@ public class BoardViewModule extends GenericModule {
 
   private AlignGroup logicGroup;
 
-  private BoardController boardController = BoardController.inst();
-  private LogicCenterModule logicCenterModule = LogicCenterModule.inst();
-  private CardController cardController = CardController.inst();
+  private final CardController cardController = CardController.inst();
+  private final BoardController boardController = BoardController.inst();
+  private final LogicCenterModule logicCenterModule = LogicCenterModule.inst();
+  private final CardPool cardPool = CardPool.inst();
 
-  private Array<Array<CardComponent>> playersCards = new Array<>();
-  private CardPool cardPool = CardPool.inst();
+  private final Array<Array<CardComponent>> playersCards = new Array<>();
 
   private BoardViewModule() {
     Main.moduleMessage().register(this, DistributeCardsCompletedMessage.class);
@@ -50,6 +50,9 @@ public class BoardViewModule extends GenericModule {
     this.displayAlignPlayerCards();
     this.enablePlayerCards();
     this.tryDisplaySpecialCards();
+
+    System.out.println("suit-value: " + this.cardController.getSuit(this.boardController.getPlayerCards(0).get(0)).toString() +
+        "-" + this.cardController.getValue(this.boardController.getPlayerCards(0).get(1)));
   }
 
   private void updatePlayerCardsValue(){
@@ -119,12 +122,6 @@ public class BoardViewModule extends GenericModule {
     for(int cardSetIndex = 0; cardSetIndex < goldPlayerIndexes.size; cardSetIndex++){
       int playerCardIndex = goldPlayerIndexes.get(cardSetIndex);
       if(playerCardIndex != this.boardController.getDealerIndex()){
-//        for(int cardIndex = 0; cardIndex < this.playersCards.get(playerCardIndex).size; cardIndex++){
-//          CardComponent card = this.playersCards.get(playerCardIndex).get(cardIndex);
-//
-//          card.addAction(Actions.moveTo(card.getX() + 30*cardIndex, card.getY(), 0.3f, Interpolation.linear));
-//          card.displayCard();
-//        }
         this.displayAlignCards(playerCardIndex);
         this.showCards(playerCardIndex);
       }
@@ -137,12 +134,6 @@ public class BoardViewModule extends GenericModule {
     for(int cardSetIndex = 0; cardSetIndex < blackjackPlayerIndex.size; cardSetIndex++){
       int playerCardIndex = blackjackPlayerIndex.get(cardSetIndex);
       if(playerCardIndex != this.boardController.getDealerIndex()){
-//        for(int cardIndex = 0; cardIndex < this.playersCards.get(playerCardIndex).size; cardIndex++){
-//          CardComponent card = this.playersCards.get(playerCardIndex).get(cardIndex);
-//
-//          card.addAction(Actions.moveTo(card.getX() + 30*cardIndex, card.getY(), 0.3f, Interpolation.linear));
-//          card.displayCard();
-//        }
         this.displayAlignCards(playerCardIndex);
         this.showCards(playerCardIndex);
       }
@@ -241,23 +232,6 @@ public class BoardViewModule extends GenericModule {
         this.playersCards.get(playerIndex).add(card);
       }
     }
-
-  }
-
-  private void displayBotsCards() {
-    int amountPlayer = this.boardController.getPlayerAmount();
-    HashMap<Integer, Vector2> positionsMap = CardViewConfig.playerPositionsMap.get(amountPlayer);
-
-    for (int botIndex = 1; botIndex < amountPlayer; botIndex++) {
-      CardComponent card = this.cardPool.getInst();
-      card.setOrigin(Align.center);
-      card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
-      Vector2 cardPosition = positionsMap.get(botIndex);
-      this.logicGroup.addActor(card, cardPosition.x, cardPosition.y, AL.tl);
-    }
-  }
-
-  private void displayPlayerCards() {
 
   }
 

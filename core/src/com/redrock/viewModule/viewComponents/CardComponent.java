@@ -71,7 +71,7 @@ public class CardComponent extends AlignGroup {
   }
 
   private void updateCardUI() {
-    String textureRegionCardName = "" + SuitModel.mapSuitToId.get(this.suit) + this.value;
+    String textureRegionCardName = SuitModel.mapSuitToId.get(this.suit) + "" + this.value;
     TextureRegionDrawable textureRegionDrawable = textureCardsMap.get(textureRegionCardName);
     this.shape.setDrawable(textureRegionDrawable);
   }
