@@ -35,8 +35,8 @@ public class CheckCardsController {
   }
 
   private PointCardModel getPointCardsSize2(Array<Integer> cards){
-    int cardValue0 = this.cardController.getSuitValue(cards.get(0));
-    int cardValue1 = this.cardController.getSuitValue(cards.get(1));
+    int cardValue0 = this.cardController.getValue(cards.get(0));
+    int cardValue1 = this.cardController.getValue(cards.get(1));
 
     if(cardValue0 == 1 && cardValue1 == 1 )
       return new PointCardModel(4, 0);
@@ -51,9 +51,9 @@ public class CheckCardsController {
   }
 
   private PointCardModel getPointCardsSize3(Array<Integer> cards){
-    int cardValue0 = this.cardController.getSuitValue(cards.get(0));
-    int cardValue1 = this.cardController.getSuitValue(cards.get(1));
-    int cardValue2 = this.cardController.getSuitValue(cards.get(2));
+    int cardValue0 = this.cardController.getValue(cards.get(0));
+    int cardValue1 = this.cardController.getValue(cards.get(1));
+    int cardValue2 = this.cardController.getValue(cards.get(2));
 
     if((cardValue0 == 1 && cardValue1 != 1 && cardValue2 != 1) ||
         (cardValue0 != 1 && cardValue1 == 1 && cardValue2 != 1) ||
@@ -76,10 +76,10 @@ public class CheckCardsController {
   }
 
   private PointCardModel getPointCardsSize4(Array<Integer> cards){
-    int cardValue0 = this.cardController.getSuitValue(cards.get(0));
-    int cardValue1 = this.cardController.getSuitValue(cards.get(1));
-    int cardValue2 = this.cardController.getSuitValue(cards.get(2));
-    int cardValue3 = this.cardController.getSuitValue(cards.get(3));
+    int cardValue0 = this.cardController.getValue(cards.get(0));
+    int cardValue1 = this.cardController.getValue(cards.get(1));
+    int cardValue2 = this.cardController.getValue(cards.get(2));
+    int cardValue3 = this.cardController.getValue(cards.get(3));
 
     int result = cardValue0 + cardValue1 + cardValue2 + cardValue3;
     if(result <= 21) return new PointCardModel(1, result);
@@ -88,11 +88,11 @@ public class CheckCardsController {
   }
 
   private PointCardModel getPointCardsSize5(Array<Integer> cards){
-    int cardValue0 = this.cardController.getSuitValue(cards.get(0));
-    int cardValue1 = this.cardController.getSuitValue(cards.get(1));
-    int cardValue2 = this.cardController.getSuitValue(cards.get(2));
-    int cardValue3 = this.cardController.getSuitValue(cards.get(3));
-    int cardValue4 = this.cardController.getSuitValue(cards.get(4));
+    int cardValue0 = this.cardController.getValue(cards.get(0));
+    int cardValue1 = this.cardController.getValue(cards.get(1));
+    int cardValue2 = this.cardController.getValue(cards.get(2));
+    int cardValue3 = this.cardController.getValue(cards.get(3));
+    int cardValue4 = this.cardController.getValue(cards.get(4));
 
     int result = cardValue0 + cardValue1 + cardValue2 + cardValue3 + cardValue4;
     if(result <= 21) return new PointCardModel(2, 21 - result);

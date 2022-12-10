@@ -60,8 +60,8 @@ public class BoardController {
    * This function is used to start distribute cards for players.
    */
   public void distributeCardsForPlayers() {
-    for(int roundDistributeIndex = 0; roundDistributeIndex < 2; roundDistributeIndex++){
-      for(int playerIndex = 0; playerIndex < this.boardModel.amountPlayer; playerIndex++){
+    for (int roundDistributeIndex = 0; roundDistributeIndex < 2; roundDistributeIndex++) {
+      for (int playerIndex = 0; playerIndex < this.boardModel.amountPlayer; playerIndex++) {
         int card = this.boardModel.cards.pop();
         this.boardModel.playerCards.get(playerIndex).add(card);
       }
@@ -71,8 +71,8 @@ public class BoardController {
   /**
    * Initialize the dealerIndex
    */
-  public void initDealerIndex(){
-    if(this.boardModel.isDealerMode){
+  public void initDealerIndex() {
+    if (this.boardModel.isDealerMode) {
       this.boardModel.dealerIndex = 0;
     }
 
@@ -83,65 +83,65 @@ public class BoardController {
    * This function is used to find Black Jack cards or
    * Gold cards after distribute cards.
    */
-  public void findSpecialCardsAfterDistribute(){
+  public void findSpecialCardsAfterDistribute() {
     this.tryClearSpecialCards();
 
-    for(int i = 0; i < this.boardModel.playerCards.size; i++) {
+    for (int i = 0; i < this.boardModel.playerCards.size; i++) {
       PointCardModel point = this.checkController.getPointCards(this.boardModel.playerCards.get(i));
 
-      if(point.type == 4) {
+      if (point.type == 4) {
         this.boardModel.goldPlayerIndexes.add(i);
 
-        if(i == this.boardModel.dealerIndex)
-          this.boardModel.isDealerHasSpecialCards = true;
+        if (i == this.boardModel.dealerIndex)
+          this.boardModel.dealerSpecialCardType = 2;
       }
 
-      if(point.type == 3) {
+      if (point.type == 3) {
         this.boardModel.blackJackPlayerIndexes.add(i);
 
-        if(i == this.boardModel.dealerIndex)
-          this.boardModel.isDealerHasSpecialCards = true;
+        if (i == this.boardModel.dealerIndex)
+          this.boardModel.dealerSpecialCardType = 1;
       }
 
       //todo: send a message notify end game.
     }
   }
 
-  private void tryClearSpecialCards(){
-    if(this.boardModel.goldPlayerIndexes.size > 0)
+  private void tryClearSpecialCards() {
+    if (this.boardModel.goldPlayerIndexes.size > 0)
       this.boardModel.goldPlayerIndexes.removeRange(0, this.boardModel.goldPlayerIndexes.size - 1);
 
-    if(this.boardModel.blackJackPlayerIndexes.size > 0)
+    if (this.boardModel.blackJackPlayerIndexes.size > 0)
       this.boardModel.blackJackPlayerIndexes.removeRange(0, this.boardModel.blackJackPlayerIndexes.size - 1);
   }
 
-  public void handlePickCardsForBots(){
-    if(this.boardModel.isDealerMode){
-      for(int playerIndex = 1; playerIndex < this.boardModel.amountPlayer; playerIndex++){
+  public void handlePickCardsForBots() {
+    if (this.boardModel.isDealerMode) {
+      for (int playerIndex = 1; playerIndex < this.boardModel.amountPlayer; playerIndex++) {
         this.pickCardForBot(playerIndex);
       }
     }
   }
 
-  private void pickCardForBot(int playerIndex){
-    while (this.shouldPickCardForBot(this.boardModel.playerCards.get(playerIndex))){
+  private void pickCardForBot(int playerIndex) {
+    while (this.shouldPickCardForBot(this.boardModel.playerCards.get(playerIndex))) {
       this.boardModel.playerCards.get(playerIndex).add(this.boardModel.cards.pop());
     }
   }
 
-  private boolean shouldPickCardForBot(Array<Integer> cards){
-    if(cards.size < 2 || cards.size >= 5)
+  private boolean shouldPickCardForBot(Array<Integer> cards) {
+    if (cards.size < 2 || cards.size >= 5)
       throw new IndexOutOfBoundsException("size cards invalid to pick more cards. Size cards: " + cards.size);
 
     PointCardModel point = this.checkController.getPointCards(cards);
     int sizeCard = cards.size;
     int type = point.type;
 
-    if(type == 1){
+    if (type == 1) {
       int pointValue = point.value;
       int ratio = CardConfig.ratioPickCards.get(sizeCard).get(pointValue);
 
-      int valueRatio = (int)Math.floor(Math.random()* 100 + 1);
+      int valueRatio = (int) Math.floor(Math.random() * 100 + 1);
       return valueRatio <= ratio;
     }
 
@@ -151,19 +151,40 @@ public class BoardController {
   /**
    * this function is used to try to pick a cord for the player.
    */
-  public void pickACardForPlayer(){
+  public void pickACardForPlayer() {
     PointCardModel point = this.checkController.getPointCards(this.boardModel.playerCards.get(0));
-    if(point.type == 0 || (point.type == 1 && point.value == 21)) return;
+    if (point.type == 0 || (point.type == 1 && point.value == 21)) return;
 
-    if(this.boardModel.playerCards.get(0).size >= 2 && this.boardModel.playerCards.get(0).size <= 4)
+    if (this.boardModel.playerCards.get(0).size >= 2 && this.boardModel.playerCards.get(0).size <= 4)
       this.boardModel.playerCards.get(0).add(this.boardModel.cards.pop());
   }
 
+  public Array<Integer> getGoldPlayerIndexes() {
+    return boardModel.goldPlayerIndexes;
+  }
+
+  public Array<Integer> getBlackjackPlayerIndexes() {
+    return boardModel.blackJackPlayerIndexes;
+  }
+
+  public int getDealerHasSpecialCardType() {
+    return this.boardModel.dealerSpecialCardType;
+  }
+
+  public int getDealerIndex(){return this.boardModel.dealerIndex;}
+
   /**
    * this func is used to return the current amount player.
+   *
    * @return current amount player.
    */
-  public int getPlayerAmount(){return this.boardModel.amountPlayer;}
+  public int getPlayerAmount() {
+    return this.boardModel.amountPlayer;
+  }
+
+  public Array<Integer> getPlayerCards(int playerIndex) {
+    return this.boardModel.playerCards.get(playerIndex);
+  }
 
   public static BoardController inst() {
     return inst;

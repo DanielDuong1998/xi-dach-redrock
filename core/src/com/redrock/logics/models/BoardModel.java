@@ -4,8 +4,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class BoardModel {
   public boolean isDealerMode = true;
-  public boolean isDealerHasSpecialCards = false;
 
+  public int dealerSpecialCardType = 0;
   public int dealerIndex = 0;
   public int amountPlayer = 6;
 
