@@ -16,6 +16,8 @@ import com.redrock.sdk.component.GenericModule;
 import com.redrock.sdk.modules.generic.GenericMessage;
 import com.redrock.viewModule.configs.CardViewConfig;
 import com.redrock.viewModule.messages.DistributeCardsCompletedMessage;
+import com.redrock.viewModule.messages.EndGameMessage;
+import com.redrock.viewModule.messages.StartPickCardsMessage;
 import com.redrock.viewModule.viewComponents.CardComponent;
 import com.redrock.viewModule.viewComponents.pools.CardPool;
 
@@ -35,12 +37,20 @@ public class BoardViewModule extends GenericModule {
 
   private BoardViewModule() {
     Main.moduleMessage().register(this, DistributeCardsCompletedMessage.class);
+    Main.moduleMessage().register(this, StartPickCardsMessage.class);
+    Main.moduleMessage().register(this, EndGameMessage.class);
   }
 
   @Override
   public void handleMsg(GenericMessage msg) {
     if(msg.getClass() == DistributeCardsCompletedMessage.class){
       this.handleDistributeCardsCompleted();
+    }
+    else if (msg.getClass() == EndGameMessage.class){
+      this.handleEndGame();
+    }
+    else if(msg.getClass() == StartPickCardsMessage.class){
+      this.handleStartPickCards();
     }
   }
 
@@ -52,6 +62,8 @@ public class BoardViewModule extends GenericModule {
     this.tryDisplaySpecialCards();
 
     System.out.println("suit-value: " + this.cardController.getSuit(this.boardController.getPlayerCards(0).get(0)).toString() +
+        "-" + this.cardController.getValue(this.boardController.getPlayerCards(0).get(0)));
+    System.out.println("suit-value2: " + this.cardController.getSuit(this.boardController.getPlayerCards(0).get(1)).toString() +
         "-" + this.cardController.getValue(this.boardController.getPlayerCards(0).get(1)));
   }
 
@@ -95,6 +107,7 @@ public class BoardViewModule extends GenericModule {
     switch (dealerSpecialCardType){
       case 0:
         this.tryDisplayBotSpecialCards();
+
         break;
       case 1:
       case 2:
@@ -107,6 +120,8 @@ public class BoardViewModule extends GenericModule {
         for(int botIndex = 1;botIndex < this.boardController.getPlayerAmount(); botIndex++){
           this.displayAlignCards(botIndex);
         }
+
+        Main.moduleMessage().sendMsg(new EndGameMessage());
         break;
     }
   }
@@ -165,6 +180,17 @@ public class BoardViewModule extends GenericModule {
           Actions.moveTo(card.getX() + horizontalDistances.get(i), card.getY(), 0.3f, Interpolation.linear)
       );
     }
+  }
+
+  private void handleStartPickCards(){
+
+  }
+
+  private void handleEndGame(){
+    // show all cards
+    // show point cards
+    // show animation end game
+    //
   }
 
   public void init(AlignGroup logicGroup) {

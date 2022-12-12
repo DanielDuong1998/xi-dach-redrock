@@ -21,7 +21,7 @@ public class BoardController {
     this.tryClearCardsBeforeInit();
 
     for (int suitIndex = 0; suitIndex < 4; suitIndex++) {
-      for (int value = 0; value < 13; value++) {
+      for (int value = 1; value <= 13; value++) {
         this.boardModel.cards.add(CardController.inst().createCard(suitIndex, value));
       }
     }
@@ -102,8 +102,6 @@ public class BoardController {
         if (i == this.boardModel.dealerIndex)
           this.boardModel.dealerSpecialCardType = 1;
       }
-
-      //todo: send a message notify end game.
     }
   }
 
@@ -167,6 +165,13 @@ public class BoardController {
     return boardModel.blackJackPlayerIndexes;
   }
 
+  /**
+   * This functions is used to return the type of point card of the Dealer.
+   * the value type equal 0, this point is normal
+   * the value type equal 1, this point is blackjack
+   * the value type equal 2, this point is gold cards
+   * @return the type of the Dealer point cards.
+   */
   public int getDealerHasSpecialCardType() {
     return this.boardModel.dealerSpecialCardType;
   }
