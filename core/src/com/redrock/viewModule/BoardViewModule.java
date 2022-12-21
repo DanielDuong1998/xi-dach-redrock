@@ -11,6 +11,7 @@ import com.redrock.comons.AlignGroup;
 import com.redrock.logics.LogicCenterModule;
 import com.redrock.logics.controllers.BoardController;
 import com.redrock.logics.controllers.CardController;
+import com.redrock.logics.controllers.CheckCardsController;
 import com.redrock.logics.models.SuitModel;
 import com.redrock.sdk.component.GenericModule;
 import com.redrock.sdk.modules.generic.GenericMessage;
@@ -43,34 +44,27 @@ public class BoardViewModule extends GenericModule {
 
   @Override
   public void handleMsg(GenericMessage msg) {
-    if(msg.getClass() == DistributeCardsCompletedMessage.class){
+    if (msg.getClass() == DistributeCardsCompletedMessage.class) {
       this.handleDistributeCardsCompleted();
-    }
-    else if (msg.getClass() == EndGameMessage.class){
+    } else if (msg.getClass() == EndGameMessage.class) {
       this.handleEndGame();
-    }
-    else if(msg.getClass() == StartPickCardsMessage.class){
+    } else if (msg.getClass() == StartPickCardsMessage.class) {
       this.handleStartPickCards();
     }
   }
 
-  private void handleDistributeCardsCompleted(){
+  private void handleDistributeCardsCompleted() {
     this.updatePlayerCardsValue();
     this.updateBotsCardsValue();
     this.displayAlignPlayerCards();
     this.enablePlayerCards();
     this.tryDisplaySpecialCards();
-
-    System.out.println("suit-value: " + this.cardController.getSuit(this.boardController.getPlayerCards(0).get(0)).toString() +
-        "-" + this.cardController.getValue(this.boardController.getPlayerCards(0).get(0)));
-    System.out.println("suit-value2: " + this.cardController.getSuit(this.boardController.getPlayerCards(0).get(1)).toString() +
-        "-" + this.cardController.getValue(this.boardController.getPlayerCards(0).get(1)));
   }
 
-  private void updatePlayerCardsValue(){
+  private void updatePlayerCardsValue() {
     Array<Integer> playerCardsValue = this.logicCenterModule.getPlayerCards(0);
 
-    for(int cardValueIndex = 0; cardValueIndex < playerCardsValue.size; cardValueIndex++){
+    for (int cardValueIndex = 0; cardValueIndex < playerCardsValue.size; cardValueIndex++) {
       int cardValue = playerCardsValue.get(cardValueIndex);
 
       int value = this.cardController.getValue(cardValue);
@@ -80,11 +74,11 @@ public class BoardViewModule extends GenericModule {
     }
   }
 
-  private void updateBotsCardsValue(){
-    for(int botIndex = 1; botIndex < this.boardController.getPlayerAmount(); botIndex++){
+  private void updateBotsCardsValue() {
+    for (int botIndex = 1; botIndex < this.boardController.getPlayerAmount(); botIndex++) {
       Array<Integer> botCardsValues = this.logicCenterModule.getPlayerCards(botIndex);
 
-      for(int cardValueIndex = 0; cardValueIndex < botCardsValues.size; cardValueIndex++){
+      for (int cardValueIndex = 0; cardValueIndex < botCardsValues.size; cardValueIndex++) {
         int cardValue = botCardsValues.get(cardValueIndex);
 
         int value = this.cardController.getValue(cardValue);
@@ -95,29 +89,32 @@ public class BoardViewModule extends GenericModule {
     }
   }
 
-  private void enablePlayerCards(){
-    for(CardComponent card: this.playersCards.get(0)){
+  private void enablePlayerCards() {
+    for (CardComponent card : this.playersCards.get(0)) {
       card.setIsEnableClick(true);
     }
   }
 
-  private void tryDisplaySpecialCards(){
+  private void tryDisplaySpecialCards() {
     int dealerSpecialCardType = this.boardController.getDealerHasSpecialCardType();
 
-    switch (dealerSpecialCardType){
+    switch (dealerSpecialCardType) {
       case 0:
         this.tryDisplayBotSpecialCards();
-
+        this.logicGroup.addAction(Actions.sequence(
+            Actions.delay(0.3f),
+            Actions.run(() -> Main.moduleMessage().sendMsg(new StartPickCardsMessage()))
+        ));
         break;
       case 1:
       case 2:
-        for(Array<CardComponent> playerCards: this.playersCards){
-          for(CardComponent card: playerCards){
+        for (Array<CardComponent> playerCards : this.playersCards) {
+          for (CardComponent card : playerCards) {
             card.displayCard();
           }
         }
 
-        for(int botIndex = 1;botIndex < this.boardController.getPlayerAmount(); botIndex++){
+        for (int botIndex = 1; botIndex < this.boardController.getPlayerAmount(); botIndex++) {
           this.displayAlignCards(botIndex);
         }
 
@@ -126,55 +123,55 @@ public class BoardViewModule extends GenericModule {
     }
   }
 
-  private void tryDisplayBotSpecialCards(){
+  private void tryDisplayBotSpecialCards() {
     this.tryDisplayBotGoldCards();
     this.tryDisplayBotBlackjackCards();
   }
 
-  private void tryDisplayBotGoldCards(){
+  private void tryDisplayBotGoldCards() {
     Array<Integer> goldPlayerIndexes = this.boardController.getGoldPlayerIndexes();
 
-    for(int cardSetIndex = 0; cardSetIndex < goldPlayerIndexes.size; cardSetIndex++){
+    for (int cardSetIndex = 0; cardSetIndex < goldPlayerIndexes.size; cardSetIndex++) {
       int playerCardIndex = goldPlayerIndexes.get(cardSetIndex);
-      if(playerCardIndex != this.boardController.getDealerIndex()){
+      if (playerCardIndex != this.boardController.getDealerIndex()) {
         this.displayAlignCards(playerCardIndex);
         this.showCards(playerCardIndex);
       }
     }
   }
 
-  private void tryDisplayBotBlackjackCards(){
+  private void tryDisplayBotBlackjackCards() {
     Array<Integer> blackjackPlayerIndex = this.boardController.getBlackjackPlayerIndexes();
 
-    for(int cardSetIndex = 0; cardSetIndex < blackjackPlayerIndex.size; cardSetIndex++){
+    for (int cardSetIndex = 0; cardSetIndex < blackjackPlayerIndex.size; cardSetIndex++) {
       int playerCardIndex = blackjackPlayerIndex.get(cardSetIndex);
-      if(playerCardIndex != this.boardController.getDealerIndex()){
+      if (playerCardIndex != this.boardController.getDealerIndex()) {
         this.displayAlignCards(playerCardIndex);
         this.showCards(playerCardIndex);
       }
     }
   }
 
-  private void displayAlignCards(int playerIndex){
-    for(int cardIndex = 0; cardIndex < this.playersCards.get(playerIndex).size; cardIndex++){
+  private void displayAlignCards(int playerIndex) {
+    for (int cardIndex = 0; cardIndex < this.playersCards.get(playerIndex).size; cardIndex++) {
       CardComponent card = this.playersCards.get(playerIndex).get(cardIndex);
 
-      card.addAction(Actions.moveTo(card.getX() + 30*cardIndex, card.getY(), 0.3f, Interpolation.linear));
+      card.addAction(Actions.moveTo(card.getX() + 30 * cardIndex, card.getY(), 0.3f, Interpolation.linear));
     }
   }
 
-  private void showCards(int playerIndex){
-    for(int cardIndex = 0; cardIndex < this.playersCards.get(playerIndex).size; cardIndex++){
+  private void showCards(int playerIndex) {
+    for (int cardIndex = 0; cardIndex < this.playersCards.get(playerIndex).size; cardIndex++) {
       CardComponent card = this.playersCards.get(playerIndex).get(cardIndex);
       card.displayCard();
     }
   }
 
-  private void displayAlignPlayerCards(){
+  private void displayAlignPlayerCards() {
     Array<Integer> horizontalDistances = new Array<>();
     horizontalDistances.add(-20, 20);
 
-    for(int i = 0; i < horizontalDistances.size; i++){
+    for (int i = 0; i < horizontalDistances.size; i++) {
       CardComponent card = this.playersCards.get(0).get(i);
       card.addAction(
           Actions.moveTo(card.getX() + horizontalDistances.get(i), card.getY(), 0.3f, Interpolation.linear)
@@ -182,11 +179,38 @@ public class BoardViewModule extends GenericModule {
     }
   }
 
-  private void handleStartPickCards(){
-
+  private void handleStartPickCards() {
+    this.logicCenterModule.startPickCardsForBots();
+    this.displayPickBotCardsAnimation();
   }
 
-  private void handleEndGame(){
+  private void displayPickBotCardsAnimation() {
+    int amountPlayer = this.boardController.getPlayerAmount();
+    HashMap<Integer, Vector2> positionsMap = CardViewConfig.playerPositionsMap.get(amountPlayer);
+    int cardPickedSize = 0;
+
+    for (int botIndex = 1; botIndex < amountPlayer; botIndex++) {
+      int pickCardSize = this.logicCenterModule.getPlayerCards(botIndex).size - 2;
+
+      for (int cardIndex = 0; cardIndex < pickCardSize; cardIndex++) {
+        CardComponent card = this.cardPool.getInst();
+        card.setOrigin(Align.center);
+        card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
+
+        this.logicGroup.addActor(card);
+
+        Vector2 startPoint = new Vector2(599, 304);
+        Vector2 endPoint = positionsMap.get(botIndex);
+        card.setPosition(startPoint.x, startPoint.y);
+
+        card.moveWithDelay(startPoint, endPoint, 0.3f, Interpolation.fastSlow, 0.5f * cardPickedSize);
+
+        cardPickedSize++;
+      }
+    }
+  }
+
+  private void handleEndGame() {
     // show all cards
     // show point cards
     // show animation end game
@@ -225,10 +249,10 @@ public class BoardViewModule extends GenericModule {
       this.playersCards.add(new Array<>());
   }
 
-  private void initDeckView(){
+  private void initDeckView() {
     CardComponent card = this.cardPool.getInst();
     card.setOrigin(Align.center);
-    card.setSize(card.getWidth()*0.7f, card.getHeight()*0.7f);
+    card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
     this.logicGroup.addActor(card, 599, 304, AL.tl);
   }
 

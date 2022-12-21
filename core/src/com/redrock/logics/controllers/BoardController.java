@@ -7,8 +7,8 @@ import com.redrock.logics.models.PointCardModel;
 
 public class BoardController {
   private static final BoardController inst = new BoardController();
-  private BoardModel boardModel;
-  private CheckCardsController checkController = CheckCardsController.inst();
+  private final BoardModel boardModel;
+  private final CheckCardsController checkController = CheckCardsController.inst();
 
   private BoardController() {
     this.boardModel = new BoardModel();
@@ -128,22 +128,32 @@ public class BoardController {
   }
 
   private boolean shouldPickCardForBot(Array<Integer> cards) {
-    if (cards.size < 2 || cards.size >= 5)
+    if (cards.size < 2 || cards.size > 5)
       throw new IndexOutOfBoundsException("size cards invalid to pick more cards. Size cards: " + cards.size);
 
+    if(cards.size == 5)
+      return false;
+
     PointCardModel point = this.checkController.getPointCards(cards);
-    int sizeCard = cards.size;
+    int cardSize = cards.size;
     int type = point.type;
 
     if (type == 1) {
       int pointValue = point.value;
-      int ratio = CardConfig.ratioPickCards.get(sizeCard).get(pointValue);
+      int ratio = this.getRatioBotPickCard(cardSize, pointValue);
 
       int valueRatio = (int) Math.floor(Math.random() * 100 + 1);
       return valueRatio <= ratio;
     }
 
     return false;
+  }
+
+  private int getRatioBotPickCard(int cardSize, int pointValue){
+    if(pointValue >= 16 && pointValue <= 20)
+      return CardConfig.ratioPickCards.get(cardSize).get(pointValue);
+
+    return 100;
   }
 
   /**
@@ -189,6 +199,10 @@ public class BoardController {
 
   public Array<Integer> getPlayerCards(int playerIndex) {
     return this.boardModel.playerCards.get(playerIndex);
+  }
+
+  public Array<Array<Integer>> getPlayerCards() {
+    return this.boardModel.playerCards;
   }
 
   public static BoardController inst() {
