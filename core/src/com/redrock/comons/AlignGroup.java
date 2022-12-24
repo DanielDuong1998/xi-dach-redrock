@@ -19,6 +19,11 @@ public class AlignGroup extends Group {
     align(padX, padY, align, actor);
   }
 
+  public void addActor(Actor... actors){
+    for(Actor actor: actors)
+      this.addActor(actor);
+  }
+
   protected void align(float padX, float padY, int align, Actor child) {
     float posX  = 0;
     float posY  = 0;

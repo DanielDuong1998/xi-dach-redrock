@@ -38,8 +38,8 @@ public class CardViewConfig {
     map5.put(4, new Vector2(997, 404));
 
     map6.put(0, new Vector2(599, 94));
-    map6.put(1, new Vector2(201, 404));
-    map6.put(2, new Vector2(201, 94));
+    map6.put(1, new Vector2(201, 94));
+    map6.put(2, new Vector2(201, 404));
     map6.put(3, new Vector2(581, 549));
     map6.put(4, new Vector2(997, 94));
     map6.put(5, new Vector2(997, 404));
