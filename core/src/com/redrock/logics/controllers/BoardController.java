@@ -121,7 +121,7 @@ public class BoardController {
     }
   }
 
-  private void pickCardForBot(int playerIndex) {
+  public void pickCardForBot(int playerIndex) {
     while (this.shouldPickCardForBot(this.boardModel.playerCards.get(playerIndex))) {
       this.boardModel.playerCards.get(playerIndex).add(this.boardModel.cards.pop());
     }

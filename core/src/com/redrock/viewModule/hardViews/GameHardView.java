@@ -1,6 +1,8 @@
 package com.redrock.viewModule.hardViews;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.redrock.Main;
 import com.redrock.comons.AL;
 import com.redrock.comons.AlignGroup;
@@ -17,7 +19,6 @@ public class GameHardView extends AlignGroup {
     bg.setSize(this.getWidth(), this.getHeight());
 
     this.addActor(bg, 0, 0, AL.c);
-    this.addActor(PickCardView.inst(), 0, 0, AL.c);
   }
 
   public static GameHardView inst(){return inst;}

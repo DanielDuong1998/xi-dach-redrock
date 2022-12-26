@@ -8,6 +8,7 @@ import com.redrock.logics.LogicCenterModule;
 import com.redrock.manager.SceneMgr;
 import com.redrock.viewModule.ViewCenterModule;
 import com.redrock.viewModule.hardViews.GameHardView;
+import com.redrock.viewModule.hardViews.PickCardView;
 
 public class GamePlayScene extends ScreenAdapter {
   private AlignGroup gParent = new AlignGroup();
@@ -21,6 +22,7 @@ public class GamePlayScene extends ScreenAdapter {
 
     this.gParent.addActor(GameHardView.inst());
     this.gParent.addActor(logicGroup, 0, 0, AL.c);
+    this.gParent.addActor(PickCardView.inst(), 0, 0, AL.c);
 
     LogicCenterModule.inst().startGame();
     ViewCenterModule.inst().init(this.logicGroup);

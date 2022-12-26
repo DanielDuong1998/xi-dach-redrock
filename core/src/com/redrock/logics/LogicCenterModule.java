@@ -27,5 +27,9 @@ public class LogicCenterModule extends GenericModule {
     this.boardController.handlePickCardsForBots();
   }
 
+  public void pickCardForPlayer(){
+    this.boardController.pickACardForPlayer();
+  }
+
   public static LogicCenterModule inst(){return inst;}
 }
