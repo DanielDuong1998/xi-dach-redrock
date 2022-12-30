@@ -1,9 +1,11 @@
 package com.redrock.logics.controllers;
 
 import com.badlogic.gdx.utils.Array;
+import com.redrock.Main;
 import com.redrock.logics.configs.CardConfig;
 import com.redrock.logics.models.BoardModel;
 import com.redrock.logics.models.PointCardModel;
+import com.redrock.viewModule.messages.CardForPlayerReceivedMessage;
 
 public class BoardController {
   private static final BoardController inst = new BoardController();
@@ -163,8 +165,14 @@ public class BoardController {
     PointCardModel point = this.checkController.getPointCards(this.boardModel.playerCards.get(0));
     if (point.type == 0 || (point.type == 1 && point.value == 21)) return;
 
-    if (this.boardModel.playerCards.get(0).size >= 2 && this.boardModel.playerCards.get(0).size <= 4)
-      this.boardModel.playerCards.get(0).add(this.boardModel.cards.pop());
+    if (this.boardModel.playerCards.get(0).size >= 2 && this.boardModel.playerCards.get(0).size <= 4){
+      int card = this.boardModel.cards.pop();
+      this.boardModel.playerCards.get(0).add(card);
+
+      CardForPlayerReceivedMessage message = new CardForPlayerReceivedMessage();
+      message.card = card;
+      Main.moduleMessage().sendMsg(message);
+    }
   }
 
   public Array<Integer> getGoldPlayerIndexes() {

@@ -16,10 +16,13 @@ import com.redrock.logics.models.SuitModel;
 import com.redrock.sdk.component.GenericModule;
 import com.redrock.sdk.modules.generic.GenericMessage;
 import com.redrock.viewModule.configs.CardViewConfig;
+import com.redrock.viewModule.messages.CardForPlayerReceivedMessage;
 import com.redrock.viewModule.messages.DistributeCardsCompletedMessage;
 import com.redrock.viewModule.messages.EndGameMessage;
 import com.redrock.viewModule.messages.StartPickCardsMessage;
+import com.redrock.viewModule.viewComponents.AvatarComponent;
 import com.redrock.viewModule.viewComponents.CardComponent;
+import com.redrock.viewModule.viewComponents.pools.AvatarPool;
 import com.redrock.viewModule.viewComponents.pools.CardPool;
 
 import java.util.HashMap;
@@ -33,13 +36,16 @@ public class BoardViewModule extends GenericModule {
   private final BoardController boardController = BoardController.inst();
   private final LogicCenterModule logicCenterModule = LogicCenterModule.inst();
   private final CardPool cardPool = CardPool.inst();
+  private final AvatarPool avatarPool = AvatarPool.inst();
 
   private final Array<Array<CardComponent>> playersCards = new Array<>();
+  private final Array<AvatarComponent> avatars = new Array<>();
 
   private BoardViewModule() {
     Main.moduleMessage().register(this, DistributeCardsCompletedMessage.class);
     Main.moduleMessage().register(this, StartPickCardsMessage.class);
     Main.moduleMessage().register(this, EndGameMessage.class);
+    Main.moduleMessage().register(this, CardForPlayerReceivedMessage.class);
   }
 
   @Override
@@ -50,6 +56,8 @@ public class BoardViewModule extends GenericModule {
       this.handleEndGame();
     } else if (msg.getClass() == StartPickCardsMessage.class) {
       this.handleStartPickCards();
+    } else if (msg.getClass() == CardForPlayerReceivedMessage.class){
+      this.movePlayerCardPicked((CardForPlayerReceivedMessage) msg);
     }
   }
 
@@ -184,6 +192,18 @@ public class BoardViewModule extends GenericModule {
     this.displayPickBotCardsAnimation();
   }
 
+  private void movePlayerCardPicked(CardForPlayerReceivedMessage message){
+    SuitModel.Suit suit = this.cardController.getSuit(message.card);
+    int value = this.cardController.getValue(message.card);
+
+    CardComponent card = CardPool.inst().getInst(suit, value);
+    this.logicGroup.addActor(card);
+    this.playersCards.get(0).add(card);
+    card.setIsEnableClick(true);
+
+    System.out.println("card picked: " + message.card);
+  }
+
   private void displayPickBotCardsAnimation() {
     int amountPlayer = this.boardController.getPlayerAmount();
     HashMap<Integer, Vector2> positionsMap = CardViewConfig.playerPositionsMap.get(amountPlayer);
@@ -199,7 +219,7 @@ public class BoardViewModule extends GenericModule {
 
         this.logicGroup.addActor(card);
 
-        Vector2 startPoint = new Vector2(599, 304);
+        Vector2 startPoint = new Vector2(CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y);
         Vector2 endPoint = positionsMap.get(botIndex);
         card.setPosition(startPoint.x, startPoint.y);
 
@@ -222,7 +242,25 @@ public class BoardViewModule extends GenericModule {
   }
 
   public void displayDistributeCardsAnimations() {
+    this.initAvatars();
     this.initCards();
+  }
+
+  private void initAvatars(){
+    for(int playerIndex = 0; playerIndex < this.boardController.getPlayerAmount(); playerIndex++){
+      AvatarComponent avatarComponent = this.avatarPool.getInst();
+      this.logicGroup.addActor(avatarComponent);
+      this.avatars.add(avatarComponent);
+    }
+
+    this.updateAvatarPositions();
+  }
+
+  private void updateAvatarPositions(){
+    for(AvatarComponent avatar: this.avatars){
+      final int avatarIndex = this.avatars.indexOf(avatar, true);
+      avatar.setPosition(CardViewConfig.avatarPositionMap.get(avatarIndex).x, CardViewConfig.avatarPositionMap.get(avatarIndex).y);
+    }
   }
 
   private void initCards() {
@@ -253,7 +291,7 @@ public class BoardViewModule extends GenericModule {
     CardComponent card = this.cardPool.getInst();
     card.setOrigin(Align.center);
     card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
-    this.logicGroup.addActor(card, 599, 304, AL.tl);
+    this.logicGroup.addActor(card, CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y, AL.bl);
   }
 
   private void moveCards() {
@@ -268,7 +306,7 @@ public class BoardViewModule extends GenericModule {
 
         this.logicGroup.addActor(card);
 
-        Vector2 startPoint = new Vector2(599, 304);
+        Vector2 startPoint = new Vector2(CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y);
         Vector2 endPoint = positionsMap.get(playerIndex);
         card.setPosition(startPoint.x, startPoint.y);
 

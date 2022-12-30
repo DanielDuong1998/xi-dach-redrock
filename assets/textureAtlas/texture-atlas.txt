@@ -1,2 +1,4 @@
+avatar.atlas
+bg.atlas
 cards.atlas
 UI.atlas

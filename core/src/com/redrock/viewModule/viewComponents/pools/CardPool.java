@@ -6,7 +6,7 @@ import com.redrock.viewModule.viewComponents.CardComponent;
 
 public class CardPool {
   private static final CardPool inst = new CardPool();
-  private Array<CardComponent> pool = new Array<>();
+  private final Array<CardComponent> pool = new Array<>();
 
   private CardPool(){
   }

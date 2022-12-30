@@ -1,82 +1,264 @@
 
 UI.png
-size: 2048, 2048
+size: 2048, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+btn_action_1
+  rotate: false
+  xy: 1174, 162
+  size: 202, 92
+  orig: 202, 92
+  offset: 0, 0
+  index: -1
+btn_action_2
+  rotate: false
+  xy: 970, 162
+  size: 202, 92
+  orig: 202, 92
+  offset: 0, 0
+  index: -1
+btn_action_3
+  rotate: false
+  xy: 1378, 162
+  size: 202, 92
+  orig: 202, 92
+  offset: 0, 0
+  index: -1
+btn_back
+  rotate: false
+  xy: 1531, 67
+  size: 108, 57
+  orig: 108, 57
+  offset: 0, 0
+  index: -1
+btn_back_pressed
+  rotate: false
+  xy: 1390, 31
+  size: 108, 57
+  orig: 108, 57
+  offset: 0, 0
+  index: -1
 btn_blue
   rotate: false
-  xy: 1284, 1538
+  xy: 2, 52
   size: 254, 85
   orig: 254, 85
   offset: 0, 0
   index: -1
 btn_dan
   rotate: false
-  xy: 2, 143
+  xy: 1582, 162
   size: 182, 92
   orig: 182, 92
   offset: 0, 0
   index: -1
 btn_dan_pressed
   rotate: false
-  xy: 1284, 1444
+  xy: 1766, 162
   size: 182, 92
   orig: 182, 92
   offset: 0, 0
   index: -1
+btn_menu
+  rotate: false
+  xy: 1672, 103
+  size: 108, 57
+  orig: 108, 57
+  offset: 0, 0
+  index: -1
+btn_menu_pressed
+  rotate: false
+  xy: 1782, 103
+  size: 108, 57
+  orig: 108, 57
+  offset: 0, 0
+  index: -1
 btn_rut
   rotate: false
-  xy: 2, 49
+  xy: 258, 45
   size: 182, 92
   orig: 182, 92
   offset: 0, 0
   index: -1
 btn_rut_pressed
   rotate: false
-  xy: 186, 143
+  xy: 970, 68
   size: 182, 92
   orig: 182, 92
   offset: 0, 0
   index: -1
-main_bg
+chip_10
   rotate: false
-  xy: 2, 903
-  size: 1280, 720
-  orig: 1280, 720
+  xy: 514, 71
+  size: 70, 73
+  orig: 70, 73
   offset: 0, 0
   index: -1
-table
+chip_100
   rotate: false
-  xy: 2, 237
-  size: 1280, 664
-  orig: 1280, 664
+  xy: 1950, 181
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_2
+  rotate: false
+  xy: 730, 71
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_20
+  rotate: false
+  xy: 658, 71
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_200
+  rotate: false
+  xy: 874, 71
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_5
+  rotate: false
+  xy: 586, 71
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_50
+  rotate: false
+  xy: 442, 64
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+chip_500
+  rotate: false
+  xy: 802, 71
+  size: 70, 73
+  orig: 70, 73
+  offset: 0, 0
+  index: -1
+frame1
+  rotate: false
+  xy: 484, 146
+  size: 484, 108
+  orig: 484, 108
+  offset: 0, 0
+  index: -1
+frame_avatar
+  rotate: false
+  xy: 1154, 34
+  size: 126, 126
+  orig: 126, 126
+  offset: 0, 0
+  index: -1
+frm_chip_mini
+  rotate: false
+  xy: 523, 47
+  size: 65, 22
+  orig: 65, 22
+  offset: 0, 0
+  index: -1
+khay chip
+  rotate: false
+  xy: 2, 139
+  size: 480, 115
+  orig: 480, 115
+  offset: 0, 0
+  index: -1
+outer_chip
+  rotate: false
+  xy: 1282, 54
+  size: 106, 106
+  orig: 106, 106
+  offset: 0, 0
+  index: -1
+result_1
+  rotate: false
+  xy: 1531, 126
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_2
+  rotate: false
+  xy: 1390, 126
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_3
+  rotate: false
+  xy: 91, 16
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_4
+  rotate: false
+  xy: 1390, 90
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+right_arrow_btn
+  rotate: false
+  xy: 590, 29
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+right_arrow_disable_btn
+  rotate: false
+  xy: 634, 29
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+right_arrow_pressed_btn
+  rotate: false
+  xy: 523, 5
+  size: 42, 40
+  orig: 42, 40
+  offset: 0, 0
+  index: -1
+shadow_chip_mini
+  rotate: false
+  xy: 1500, 58
+  size: 28, 30
+  orig: 28, 30
   offset: 0, 0
   index: -1
 text_dan
   rotate: false
-  xy: 1540, 1572
+  xy: 1892, 109
   size: 89, 51
   orig: 89, 51
   offset: 0, 0
   index: -1
 text_dan_pressed
   rotate: false
-  xy: 2, 2
+  xy: 1282, 7
   size: 81, 45
   orig: 81, 45
   offset: 0, 0
   index: -1
 text_rut
   rotate: false
-  xy: 1284, 1394
+  xy: 2, 2
   size: 87, 48
   orig: 87, 48
   offset: 0, 0
   index: -1
 text_rut_pressed
   rotate: false
-  xy: 186, 97
+  xy: 442, 18
   size: 79, 44
   orig: 79, 44
   offset: 0, 0

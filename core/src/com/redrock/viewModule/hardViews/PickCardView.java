@@ -99,7 +99,7 @@ public class PickCardView extends AlignGroup {
         super.touchUp(event, x, y, pointer, button);
 
         setButtonState(ButtonType.PICK_BUTTON, ButtonState.NORMAL);
-        System.out.println("intapSquare: " + inTapSquare());
+
         if(inTapSquare())
           Main.moduleMessage().sendMsg(new PickACardForPlayerMessage());
       }

@@ -2,6 +2,7 @@ package com.redrock.viewModule;
 
 import com.redrock.comons.AlignGroup;
 import com.redrock.sdk.component.GenericModule;
+import com.redrock.viewModule.hardViews.HeaderMainGameView;
 
 public class ViewCenterModule extends GenericModule {
   private static final ViewCenterModule inst = new ViewCenterModule();
