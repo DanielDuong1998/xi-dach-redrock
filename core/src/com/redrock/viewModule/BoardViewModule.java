@@ -11,7 +11,6 @@ import com.redrock.comons.AlignGroup;
 import com.redrock.logics.LogicCenterModule;
 import com.redrock.logics.controllers.BoardController;
 import com.redrock.logics.controllers.CardController;
-import com.redrock.logics.controllers.CheckCardsController;
 import com.redrock.logics.models.SuitModel;
 import com.redrock.sdk.component.GenericModule;
 import com.redrock.sdk.modules.generic.GenericMessage;
@@ -254,12 +253,20 @@ public class BoardViewModule extends GenericModule {
     }
 
     this.updateAvatarPositions();
+    this.updateScoreFramePositions();
   }
 
   private void updateAvatarPositions(){
     for(AvatarComponent avatar: this.avatars){
       final int avatarIndex = this.avatars.indexOf(avatar, true);
       avatar.setPosition(CardViewConfig.avatarPositionMap.get(avatarIndex).x, CardViewConfig.avatarPositionMap.get(avatarIndex).y);
+    }
+  }
+
+  private void updateScoreFramePositions(){
+    for(AvatarComponent avatar: this.avatars){
+      final int avatarIndex = this.avatars.indexOf(avatar, true);
+      avatar.setScoreFramePositionFromPoint(CardViewConfig.scoreFramePositionMap.get(avatarIndex));
     }
   }
 

@@ -7,7 +7,10 @@ import java.util.HashMap;
 public class CardViewConfig {
   public static HashMap<Integer, HashMap<Integer, Vector2>> playerPositionsMap = new HashMap<>();
   public static HashMap<Integer, Vector2> avatarPositionMap = new HashMap<>();
+  public static HashMap<Integer, Vector2> scoreFramePositionMap = new HashMap<>();
+
   public static Vector2 cardDeckPosition = new Vector2(866, 592);
+
   static {
     HashMap<Integer, Vector2> map2 = new HashMap<>();
     HashMap<Integer, Vector2> map3 = new HashMap<>();
@@ -52,5 +55,12 @@ public class CardViewConfig {
     avatarPositionMap.put(3, new Vector2(473, 498));
     avatarPositionMap.put(4, new Vector2(1131, 358));
     avatarPositionMap.put(5, new Vector2(981, 118));
+
+    scoreFramePositionMap.put(0, new Vector2(33, 345));
+    scoreFramePositionMap.put(1, new Vector2(170, 302));
+    scoreFramePositionMap.put(2, new Vector2(170, 302));
+    scoreFramePositionMap.put(3, new Vector2(220, 160));
+    scoreFramePositionMap.put(4, new Vector2(-105, 302));
+    scoreFramePositionMap.put(5, new Vector2(-107, 302));
   }
 }
