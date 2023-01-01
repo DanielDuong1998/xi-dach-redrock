@@ -144,3 +144,31 @@ frame_score
   orig: 70, 32
   offset: 0, 0
   index: -1
+result_1
+  rotate: false
+  xy: 281, 99
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_2
+  rotate: false
+  xy: 140, 55
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_3
+  rotate: false
+  xy: 140, 91
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1
+result_4
+  rotate: false
+  xy: 140, 19
+  size: 139, 34
+  orig: 139, 34
+  offset: 0, 0
+  index: -1

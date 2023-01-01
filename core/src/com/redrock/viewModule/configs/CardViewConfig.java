@@ -8,6 +8,7 @@ public class CardViewConfig {
   public static HashMap<Integer, HashMap<Integer, Vector2>> playerPositionsMap = new HashMap<>();
   public static HashMap<Integer, Vector2> avatarPositionMap = new HashMap<>();
   public static HashMap<Integer, Vector2> scoreFramePositionMap = new HashMap<>();
+  public static HashMap<Integer, Vector2> resultFramePositionMap = new HashMap<>();
 
   public static Vector2 cardDeckPosition = new Vector2(866, 592);
 
@@ -62,5 +63,12 @@ public class CardViewConfig {
     scoreFramePositionMap.put(3, new Vector2(220, 160));
     scoreFramePositionMap.put(4, new Vector2(-105, 302));
     scoreFramePositionMap.put(5, new Vector2(-107, 302));
+
+    resultFramePositionMap.put(0, new Vector2(1.5f, 248));
+    resultFramePositionMap.put(1, new Vector2(131, 203));
+    resultFramePositionMap.put(2, new Vector2(131, 203));
+    resultFramePositionMap.put(3, new Vector2(174, 100));
+    resultFramePositionMap.put(4, new Vector2(-131, 203));
+    resultFramePositionMap.put(5, new Vector2(-131, 203));
   }
 }

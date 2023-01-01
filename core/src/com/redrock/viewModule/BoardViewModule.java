@@ -254,6 +254,7 @@ public class BoardViewModule extends GenericModule {
 
     this.updateAvatarPositions();
     this.updateScoreFramePositions();
+    this.updateResultFramePositions();
   }
 
   private void updateAvatarPositions(){
@@ -267,6 +268,13 @@ public class BoardViewModule extends GenericModule {
     for(AvatarComponent avatar: this.avatars){
       final int avatarIndex = this.avatars.indexOf(avatar, true);
       avatar.setScoreFramePositionFromPoint(CardViewConfig.scoreFramePositionMap.get(avatarIndex));
+    }
+  }
+
+  private void updateResultFramePositions(){
+    for(AvatarComponent avatar: this.avatars){
+      final int avatarIndex = this.avatars.indexOf(avatar, true);
+      avatar.setResultFramePositionFromPoint(CardViewConfig.resultFramePositionMap.get(avatarIndex));
     }
   }
 

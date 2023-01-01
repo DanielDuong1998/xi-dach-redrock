@@ -12,8 +12,8 @@ public class AvatarComponent extends AlignGroup {
   public boolean isFree = true;
 
   private Image avatar, avatarBack, avatarFrame, scoreFrame, nameFrame, scoreBack;
-  private Label nameLabel, coinLabel, scoreLabel, scoreText;
-  private AlignGroup scoreGroup;
+  private Label nameLabel, coinLabel, scoreLabel, resultLabel;
+  private AlignGroup resultGroup;
 
   public AvatarComponent() {
     this.setSize(136, 217);
@@ -21,20 +21,21 @@ public class AvatarComponent extends AlignGroup {
   }
 
   private void initUI() {
-    this.scoreGroup = new AlignGroup();
+    this.resultGroup = new AlignGroup();
     this.avatar = new Image(Main.asset().getTG("avatar_1"));
     this.avatarBack = new Image(Main.asset().getTG("bg_avatar"));
     this.avatarFrame = new Image(Main.asset().getTG("frame_avatar"));
     this.scoreFrame = new Image(Main.asset().getTG("frame_score"));
     this.nameFrame = new Image(Main.asset().getTG("frame_name"));
-    this.nameLabel = new Label("1", new Label.LabelStyle(Main.asset().getBMFont("wheel_font"), null));
-    this.coinLabel = new Label("2", new Label.LabelStyle(Main.asset().getBMFont("wheel_font"), null));
-    this.scoreLabel = new Label("3", new Label.LabelStyle(Main.asset().getBMFont("wheel_font"), null));
-    this.scoreText = new Label("4", new Label.LabelStyle(Main.asset().getBMFont("wheel_font"), null));
+    this.scoreBack = new Image(Main.asset().getTG("result_1"));
+    this.nameLabel = new Label("Boss", new Label.LabelStyle(Main.asset().getBMFont("Arial-boldMT-LightYellow"), null));
+    this.coinLabel = new Label("2", new Label.LabelStyle(Main.asset().getBMFont("Arial-boldMT-LightYellow"), null));
+    this.scoreLabel = new Label("3", new Label.LabelStyle(Main.asset().getBMFont("Arial-boldMT-Yellow"), null));
+    this.resultLabel = new Label("XÌ DÁCH", new Label.LabelStyle(Main.asset().getBMFont("Arial-boldMT-White"), null));
 
     this.coinLabel.setOrigin(Align.center);
 
-    this.scoreGroup.setSize(139, 34);
+    this.resultGroup.setSize(139, 34);
 
     this.addActor(this.nameFrame, 0, 0, AL.c);
     this.addActor(this.avatarBack, 0, 6, AL.ct);
@@ -44,14 +45,23 @@ public class AvatarComponent extends AlignGroup {
     this.addActor(this.nameLabel, 0, 139, AL.ct);
     this.addActor(this.coinLabel, 0, 163, AL.ct);
     this.addActor(this.scoreLabel, 0, 163, AL.ct);
-    this.addActor(this.scoreBack, 0, 0, AL.ct);
-    this.scoreGroup.addActor(scoreBack, scoreText);
+    this.addActor(this.resultGroup, 0, 0, AL.ct);
+    this.resultGroup.addActor(scoreBack, resultLabel);
+
+    this.resultGroup.debug();
+    this.resultLabel.debug();
   }
 
   public void setScoreFramePositionFromPoint(Vector2 position) {
     this.scoreFrame.setPosition(position.x, position.y);
     this.coinLabel.setPosition(this.scoreFrame.getX() + (this.scoreFrame.getWidth() - this.coinLabel.getPrefWidth()) / 2,
         this.scoreFrame.getY() + (this.scoreFrame.getHeight() - this.coinLabel.getPrefHeight()) / 2);
+  }
+
+  public void setResultFramePositionFromPoint(Vector2 position) {
+    this.resultGroup.setPosition(position.x, position.y);
+    this.resultLabel.setPosition((this.resultGroup.getWidth() - this.resultLabel.getPrefWidth()) / 2,
+        (this.resultGroup.getHeight() - this.resultLabel.getPrefHeight()) / 2);
   }
 
   public void reset() {
