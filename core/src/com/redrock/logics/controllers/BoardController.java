@@ -5,6 +5,7 @@ import com.redrock.Main;
 import com.redrock.logics.configs.CardConfig;
 import com.redrock.logics.models.BoardModel;
 import com.redrock.logics.models.PointCardModel;
+import com.redrock.logics.models.SuitModel;
 import com.redrock.viewModule.messages.CardForPlayerReceivedMessage;
 
 public class BoardController {
@@ -163,6 +164,7 @@ public class BoardController {
    */
   public void pickACardForPlayer() {
     PointCardModel point = this.checkController.getPointCards(this.boardModel.playerCards.get(0));
+
     if (point.type == 0 || (point.type == 1 && point.value == 21)) return;
 
     if (this.boardModel.playerCards.get(0).size >= 2 && this.boardModel.playerCards.get(0).size <= 4){

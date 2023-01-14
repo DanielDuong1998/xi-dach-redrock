@@ -2,6 +2,7 @@ package com.redrock.viewModule;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -18,6 +19,7 @@ import com.redrock.viewModule.configs.CardViewConfig;
 import com.redrock.viewModule.messages.CardForPlayerReceivedMessage;
 import com.redrock.viewModule.messages.DistributeCardsCompletedMessage;
 import com.redrock.viewModule.messages.EndGameMessage;
+import com.redrock.viewModule.messages.ShowViewCardsMessage;
 import com.redrock.viewModule.messages.StartPickCardsMessage;
 import com.redrock.viewModule.viewComponents.AvatarComponent;
 import com.redrock.viewModule.viewComponents.CardComponent;
@@ -29,7 +31,7 @@ import java.util.HashMap;
 public class BoardViewModule extends GenericModule {
   private static final BoardViewModule inst = new BoardViewModule();
 
-  private AlignGroup logicGroup;
+  private AlignGroup logicGroup, interactiveGroup, notInteractiveGroup;
 
   private final CardController cardController = CardController.inst();
   private final BoardController boardController = BoardController.inst();
@@ -45,6 +47,7 @@ public class BoardViewModule extends GenericModule {
     Main.moduleMessage().register(this, StartPickCardsMessage.class);
     Main.moduleMessage().register(this, EndGameMessage.class);
     Main.moduleMessage().register(this, CardForPlayerReceivedMessage.class);
+    Main.moduleMessage().register(this, ShowViewCardsMessage.class);
   }
 
   @Override
@@ -55,8 +58,10 @@ public class BoardViewModule extends GenericModule {
       this.handleEndGame();
     } else if (msg.getClass() == StartPickCardsMessage.class) {
       this.handleStartPickCards();
-    } else if (msg.getClass() == CardForPlayerReceivedMessage.class){
+    } else if (msg.getClass() == CardForPlayerReceivedMessage.class) {
       this.movePlayerCardPicked((CardForPlayerReceivedMessage) msg);
+    } else if (msg.getClass() == ShowViewCardsMessage.class) {
+      this.showViewCards((ShowViewCardsMessage) msg);
     }
   }
 
@@ -191,16 +196,63 @@ public class BoardViewModule extends GenericModule {
     this.displayPickBotCardsAnimation();
   }
 
-  private void movePlayerCardPicked(CardForPlayerReceivedMessage message){
+  private void movePlayerCardPicked(CardForPlayerReceivedMessage message) {
     SuitModel.Suit suit = this.cardController.getSuit(message.card);
     int value = this.cardController.getValue(message.card);
 
     CardComponent card = CardPool.inst().getInst(suit, value);
-    this.logicGroup.addActor(card);
     this.playersCards.get(0).add(card);
+
+    Array<Float> xPositions = this.findXPositionForPlayerCards(0);
+    Vector2 startPoint = new Vector2(CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y);
+    Vector2 endPoint = new Vector2(xPositions.get(xPositions.size - 1), playersCards.get(0).get(0).getY());
+
+    card.setPosition(startPoint.x, startPoint.y);
+    card.setSize(card.getWidth() * CardViewConfig.ratioCardView, card.getHeight() * CardViewConfig.ratioCardView);
+    this.interactiveGroup.addActor(card);
     card.setIsEnableClick(true);
 
-    System.out.println("card picked: " + message.card);
+    card.move(startPoint, endPoint, 0.2f, Interpolation.fastSlow);
+    for (int i = 0; i < playersCards.get(0).size - 1; i++) {
+      Vector2 oldPoint = new Vector2(this.playersCards.get(0).get(i).getX(), this.playersCards.get(0).get(i).getY());
+      Vector2 newPoint = new Vector2(xPositions.get(i), oldPoint.y);
+
+      this.playersCards.get(0).get(i).move(oldPoint, newPoint, 0.2f, Interpolation.fastSlow);
+    }
+  }
+
+  private void showViewCards(ShowViewCardsMessage message) {
+    Array<Float> xPositions = this.findXPositionForPlayerCards(message.playerIndex);
+
+    for (int i = 0; i < playersCards.get(message.playerIndex).size; i++) {
+      Vector2 oldPoint = new Vector2(this.playersCards.get(message.playerIndex).get(i).getX(), this.playersCards.get(message.playerIndex).get(i).getY());
+      Vector2 newPoint = new Vector2(xPositions.get(i), oldPoint.y);
+
+      this.playersCards.get(message.playerIndex).get(i).move(oldPoint, newPoint, 0.2f, Interpolation.fastSlow);
+      this.playersCards.get(message.playerIndex).get(i).displayCard();
+    }
+  }
+
+  private Array<Float> findXPositionForPlayerCards(int playerIndex) {
+    final float maxWithPlayerDeckCards = this.playersCards.get(playerIndex).size > 2 ?
+        CardViewConfig.maxWithPlayerDeckCards : 101.9f;
+
+    Array<Float> xPositions = new Array<>();
+    float widthCard = this.playersCards.get(playerIndex).get(0).getWidth();
+    float startXPositionCard = CardViewConfig.playerPositionsMap.get(this.boardController.getPlayerAmount()).get(playerIndex).x + widthCard / 2;
+    float xPositionLastCard = startXPositionCard + maxWithPlayerDeckCards / 2 - widthCard;
+    float distancePerCards = (maxWithPlayerDeckCards - widthCard) / (playersCards.get(playerIndex).size - 1);
+
+    xPositions.add(xPositionLastCard);
+
+    for (int i = 0; i < this.playersCards.get(playerIndex).size - 1; i++) {
+      float xPosition = xPositions.get(i) - distancePerCards;
+      xPositions.add(xPosition);
+    }
+
+    xPositions.reverse();
+
+    return xPositions;
   }
 
   private void displayPickBotCardsAnimation() {
@@ -213,10 +265,11 @@ public class BoardViewModule extends GenericModule {
 
       for (int cardIndex = 0; cardIndex < pickCardSize; cardIndex++) {
         CardComponent card = this.cardPool.getInst();
+        this.playersCards.get(botIndex).add(card);
         card.setOrigin(Align.center);
         card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
 
-        this.logicGroup.addActor(card);
+        this.interactiveGroup.addActor(card);
 
         Vector2 startPoint = new Vector2(CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y);
         Vector2 endPoint = positionsMap.get(botIndex);
@@ -238,6 +291,16 @@ public class BoardViewModule extends GenericModule {
 
   public void init(AlignGroup logicGroup) {
     this.logicGroup = logicGroup;
+
+    this.interactiveGroup = new AlignGroup();
+    this.notInteractiveGroup = new AlignGroup();
+
+    this.notInteractiveGroup.setTouchable(Touchable.disabled);
+
+    this.interactiveGroup.setSize(logicGroup.getWidth(), logicGroup.getHeight());
+    this.notInteractiveGroup.setSize(logicGroup.getWidth(), logicGroup.getHeight());
+
+    this.logicGroup.addActor(this.interactiveGroup, this.notInteractiveGroup);
   }
 
   public void displayDistributeCardsAnimations() {
@@ -245,11 +308,17 @@ public class BoardViewModule extends GenericModule {
     this.initCards();
   }
 
-  private void initAvatars(){
-    for(int playerIndex = 0; playerIndex < this.boardController.getPlayerAmount(); playerIndex++){
+  private void initAvatars() {
+    for (int playerIndex = 0; playerIndex < this.boardController.getPlayerAmount(); playerIndex++) {
       AvatarComponent avatarComponent = this.avatarPool.getInst();
-      this.logicGroup.addActor(avatarComponent);
+      this.notInteractiveGroup.addActor(avatarComponent);
       this.avatars.add(avatarComponent);
+
+      avatarComponent.updatePlayerIndex(playerIndex);
+      avatarComponent.addGroupForShowCardButton(this.interactiveGroup);
+
+      if (playerIndex != 0)
+        avatarComponent.updatePositionForShowCardButton(CardViewConfig.showCardPositionMap.get(playerIndex));
     }
 
     this.updateAvatarPositions();
@@ -257,22 +326,22 @@ public class BoardViewModule extends GenericModule {
     this.updateResultFramePositions();
   }
 
-  private void updateAvatarPositions(){
-    for(AvatarComponent avatar: this.avatars){
+  private void updateAvatarPositions() {
+    for (AvatarComponent avatar : this.avatars) {
       final int avatarIndex = this.avatars.indexOf(avatar, true);
       avatar.setPosition(CardViewConfig.avatarPositionMap.get(avatarIndex).x, CardViewConfig.avatarPositionMap.get(avatarIndex).y);
     }
   }
 
-  private void updateScoreFramePositions(){
-    for(AvatarComponent avatar: this.avatars){
+  private void updateScoreFramePositions() {
+    for (AvatarComponent avatar : this.avatars) {
       final int avatarIndex = this.avatars.indexOf(avatar, true);
       avatar.setScoreFramePositionFromPoint(CardViewConfig.scoreFramePositionMap.get(avatarIndex));
     }
   }
 
-  private void updateResultFramePositions(){
-    for(AvatarComponent avatar: this.avatars){
+  private void updateResultFramePositions() {
+    for (AvatarComponent avatar : this.avatars) {
       final int avatarIndex = this.avatars.indexOf(avatar, true);
       avatar.setResultFramePositionFromPoint(CardViewConfig.resultFramePositionMap.get(avatarIndex));
     }
@@ -306,7 +375,7 @@ public class BoardViewModule extends GenericModule {
     CardComponent card = this.cardPool.getInst();
     card.setOrigin(Align.center);
     card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
-    this.logicGroup.addActor(card, CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y, AL.bl);
+    this.interactiveGroup.addActor(card, CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y, AL.bl);
   }
 
   private void moveCards() {
@@ -319,7 +388,7 @@ public class BoardViewModule extends GenericModule {
         card.setOrigin(Align.center);
         card.setSize(card.getWidth() * 0.7f, card.getHeight() * 0.7f);
 
-        this.logicGroup.addActor(card);
+        this.interactiveGroup.addActor(card);
 
         Vector2 startPoint = new Vector2(CardViewConfig.cardDeckPosition.x, CardViewConfig.cardDeckPosition.y);
         Vector2 endPoint = positionsMap.get(playerIndex);

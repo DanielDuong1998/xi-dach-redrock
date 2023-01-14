@@ -18,7 +18,7 @@ public class CardController {
 
 
   public int getValue(int card){
-    return card >> 2;
+    return Math.min(10, card >> 2);
   }
 
   /**
